@@ -53,8 +53,16 @@ const Customer = mongoose.model("Customer", customerSchema);
 // };
 
 // addOrders();
-const findCust = async () =>{
-    let result = await Customer.find({}).populate("orders");
-    console.log(result[0]);
-}
-findCust();
+// const findCust = async () =>{
+//     let result = await Customer.find({}).populate("orders");
+//     console.log(result[0]);
+// }
+// findCust();
+
+//Mongoose Middlewares
+customerSchema.post("findOneAndDelete", async (customer)=>{
+    if(customer.orders.length){
+        let res = await Order.deleteMany({_id : {$in : customer.orders}});
+        console.log(res);
+    }
+})
